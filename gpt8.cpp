@@ -1,0 +1,141 @@
+#include <windows.h>                      
+#include <iostream>                      
+#include <conio.h>                       
+
+using namespace std;                     
+
+void gotoxy(USHORT x, USHORT y){ COORD cp={x,y};                              
+SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cp); }
+
+void TITULOS();
+int MENU();
+int CREAR(int ARREGLO[10], int N);
+void CONSULTA(int ARREGLO[10], int N);
+
+long VALNUMERO(int X, int Y, int T );
+
+main()
+    {
+    char OP = 'S';
+    int  TIPO, N = 0, VECTOR[10];
+    while ( OP == 'S')
+        {
+        TITULOS();
+        TIPO = MENU();
+        switch (TIPO) {
+            case 1 : N = CREAR(VECTOR,N);
+                     break;
+            case 2 : CONSULTA(VECTOR, N );
+                	 break;
+            case 3 : OP = 'N';
+           }
+       }
+    }
+  
+  
+void TITULOS()
+   {
+   system("cls");
+   system("color F1");
+   gotoxy(25,6) ; cout <<"CREAR Y CONSULTAR UN ARREGLO";
+   gotoxy(28,7);  cout <<"UNIDIMENSIONAL - VECTOR" ;
+   }
+  
+  int MENU()
+   {
+   int OP ;
+   gotoxy(26,10); cout << "1 - ASIGNAR VALORES AL VECTOR" ;
+   gotoxy(26,11); cout << "2 - CONSULTAR VALORES DEL VECTOR";
+   gotoxy(26,13); cout << "3 - SALIR DEL PROGRAMA";
+   do  {
+        gotoxy(22,16); cout << "SELECIONE UNA DE LAS ALTERNATIVAS : ";
+        OP = VALNUMERO(58,16,1);
+        gotoxy(30,22); cout << "VALOR FUERA DE RANGO";
+   }  while((OP < 1) || (OP > 3)) ;
+   gotoxy(30,22); cout << "                            ";
+   return OP ;
+   }    
+
+ int CREAR(int ARREGLO[10],int N)
+    {
+    char OP2 = 'S';
+    if (N >= 10)
+	   {
+	   gotoxy(27,23) ; cout << "NO HAY ESPACIOS DISPONIBLES";
+	   getch();
+	   }
+	  else
+	   {
+       TITULOS();
+       gotoxy(27,9) ; cout << "ASIGNAR VALORES AL VECTOR";  
+       while ((N < 10 )&& (OP2 == 'S'))
+	     {
+	     gotoxy(15,15); cout << "Introducir un valor Entero para la posicion "<< N << " -> ";
+	     gotoxy(62,15); ARREGLO[N] = VALNUMERO(65,15,10);
+	     N++;
+	     do {
+            gotoxy(27,20); cout<< "DESEA CONTINUAR  S/N : " ;
+            OP2 = toupper(getche());
+         }  while ((OP2 != 'S') && (OP2 != 'N'));
+         gotoxy(27,20); cout<< "                                 " ;
+	     }
+        }
+	return N;
+    } 
+
+ void CONSULTA(int ARREGLO[10], int N)
+    {
+    int I ;
+	if ( N == 0)
+	   {
+	   gotoxy (20,24); cout << " No existen elementos en la Listas";
+	   getch();
+	   }
+	 else
+	   {
+	   TITULOS();
+       gotoxy(26,9) ; cout << "CONSULTAR VALORES AL VECTOR" ;
+       gotoxy(25,14); cout << "VECTOR = " ;
+       for ( I = 0 ; I < N ; I++ )
+	       cout<< ARREGLO[I] << "   " ;
+       gotoxy(25,19); cout << "Pulse cualquier tecla para salir ";
+       getch();
+       } 
+     }
+
+long VALNUMERO(int X, int Y, int T )
+  {
+  long NUMERO ;
+  char CADENA[30] ;
+  int  SW, K, LONGITUD;
+  cin.sync();
+  do { 
+     SW = 0 ;
+     gotoxy(X,Y) ; cout << "               " ;
+     gotoxy(X,Y); NUMERO = atof(gets(CADENA));
+     LONGITUD = strlen(CADENA) ;
+     if ( LONGITUD == 0 )
+        {
+        gotoxy(20,22); cout << "ERROR.. no ha escrito nada, max = " << T;
+        getch();
+        SW = 1;
+        }
+      else
+        if ( LONGITUD > T)
+	       {
+	       gotoxy(20,22); cout << "ERROR.. demasiados digitos, Max = " << T;
+	       getch();
+	       SW = 1;
+	       }
+	     else
+	       for ( K = 0 ; ( K < LONGITUD && SW == 0 ) ; K++ )
+	           if ( !isdigit(CADENA[K]) )
+	              {
+		  	      gotoxy(20,22); cout << "ERROR.. No Digite Letras";
+		          getch();
+		          SW = 1;
+		          }
+   gotoxy(20,22) ;cout << "                                                                ";
+   }  while ( SW == 1 ) ;
+   return  NUMERO ;
+  }
